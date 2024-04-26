@@ -3,6 +3,7 @@ package com.dqt.hotel.service;
 import com.dqt.hotel.constant.Constant;
 import com.dqt.hotel.dto.request.RoleRequest;
 import com.dqt.hotel.dto.request.SignupRequest;
+import com.dqt.hotel.dto.request.UserRequest;
 import com.dqt.hotel.dto.response.ResponseMessage;
 import com.dqt.hotel.dto.response.UserResponse;
 import com.dqt.hotel.entity.Role;
@@ -13,13 +14,15 @@ import com.dqt.hotel.repository.UserRepository;
 import com.dqt.hotel.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -53,7 +56,7 @@ public class UserService {
                 .enable(Constant.ACTIVE)
                 .build();
         User save = userRepository.save(user);
-        return ResponseMessage.ok("Created new user", convertToUserResponse(save));
+        return ResponseMessage.ok("Created new user", new UserResponse(save));
     }
 
     public ResponseMessage changeRole(RoleRequest roleRequest) {
@@ -72,7 +75,7 @@ public class UserService {
 
         user.setRoles(roles);
         User save = userRepository.save(user);
-        return ResponseMessage.ok("Change role user successfully", convertToUserResponse(save));
+        return ResponseMessage.ok("Change role user successfully", new UserResponse(save));
     }
 
     public ResponseMessage getCurrentUser() {
@@ -80,20 +83,79 @@ public class UserService {
         if (user == null) {
             return ResponseMessage.error("User not found");
         }
-        return ResponseMessage.ok("Get current user", convertToUserResponse(user));
+        return ResponseMessage.ok("Get current user", new UserResponse(user));
     }
 
-    public UserResponse convertToUserResponse(User user) {
-        return UserResponse.builder()
-                .address(user.getAddress())
-                .phone(user.getPhone())
-                .identity(user.getIdentity())
-                .fullName(user.getFullName())
-                .email(user.getEmail())
-                .roles(user.getRoles())
-                .enable(user.getEnable())
+    public Map<String, Object> getListUser(Integer page, Integer pageSize, String key) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, Constant.CREATED_AT));
+        List<User> all = userRepository.filterUser(pageable, Utils.checkNullString(key));
+        List<UserResponse> collect = all.stream().map(UserResponse::new).collect(Collectors.toList());
+
+        Long count = userRepository.countUser(Utils.checkNullString(key));
+        Map<String, Object> stringObjectMap = Utils.putData(page, pageSize, count, collect);
+
+        return stringObjectMap;
+    }
+
+
+    public ResponseMessage addUser(UserRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            return ResponseMessage.error("User already registered");
+        }
+
+        Set<Role> roles = new HashSet<>();
+
+        request.getRoles().forEach(r -> {
+            Role role = roleRepository.findByName(r.toUpperCase()).orElseThrow(() -> new ResourceNotFoundException("Role", "roleName", "role"));
+            roles.add(role);
+        });
+
+        // Create new user's account
+        User user = User.builder()
+                .email(request.getEmail())
+                .fullName(request.getFullName())
+                .identity(request.getIdentity())
+                .phone(request.getPhone())
+                .address(request.getAddress())
+                .password(encoder.encode(request.getPassword()))
+                .roles(roles)
+                .createAt(new Date())
+                .enable(Constant.ACTIVE)
                 .build();
+
+        User save = userRepository.save(user);
+        return ResponseMessage.ok("Created new user", new UserResponse(save));
+
     }
 
+    public ResponseMessage getUserById(Integer id) {
+        Optional<User> optional = userRepository.findById(id);
+        if (!optional.isPresent()) {
+            return ResponseMessage.error("User not found");
+        }
+        User user = optional.get();
+        return ResponseMessage.ok("Get user", new UserResponse(user));
+    }
 
+    public ResponseMessage editUser(UserRequest request, Integer id) {
+        Optional<User> optional = userRepository.findById(id);
+        if (!optional.isPresent()) {
+            return ResponseMessage.error("User not found");
+        }
+        User user = optional.get();
+        BeanUtils.copyProperties(request, user);
+        User save = userRepository.save(user);
+        return ResponseMessage.ok("Edit hotel successfully",new UserResponse(save));
+
+    }
+
+    public ResponseMessage enabled(Integer id, Integer active) {
+        Optional<User> optional = userRepository.findById(id);
+        if (!optional.isPresent()) {
+            return ResponseMessage.error("User not found");
+        }
+
+        userRepository.updateEnabled(active, id);
+        return ResponseMessage.ok("Successfully");
+    }
 }

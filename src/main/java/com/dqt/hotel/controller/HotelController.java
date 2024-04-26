@@ -24,16 +24,16 @@ public class HotelController {
     private final HotelService hotelService;
 
     @GetMapping
-    public ResponseEntity<?> getHotel(@RequestParam(required = false, defaultValue = "1") Integer page,
+    public ResponseEntity<?> getListHotel(@RequestParam(required = false, defaultValue = "1") Integer page,
                                       @RequestParam(required = false, defaultValue = "20") Integer pageSize,
                                       @RequestParam(required = false) String key) {
         try {
-            log.info("Start getHotel with request: {}, {}, {}", page, pageSize, key);
+            log.info("Start getListHotel with request: {}, {}, {}", page, pageSize, key);
             Map<String, Object> result = hotelService.listHotel(page, pageSize, key);
-            log.info("End getHotel: {}", result);
+            log.info("End getListHotel: {}", result);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
-            log.error("Error getHotel: {}", e.getMessage());
+            log.error("Error getListHotel: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -55,7 +55,7 @@ public class HotelController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     @PreAuthorize(Authority.ADMIN)
     public ResponseEntity<?> editHotel(@RequestBody HotelRequest request, @PathVariable Integer id) {
         try {
@@ -72,13 +72,13 @@ public class HotelController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
 //    @PreAuthorize("permitAll()")
 //    @PreAuthorize("!isAnonymous()")
     public ResponseEntity<?> getHotelById(@PathVariable Integer id) {
         try {
             log.info("Start getHotelById with request: {}", id);
-            ResponseMessage responseMessage = hotelService.getHotelById(id);
+            ResponseMessage responseMessage = hotelService.getHotelEnabledById(id);
             log.info("End getHotelById: {}", responseMessage);
             if (responseMessage.isStatus()) {
                 return ResponseEntity.ok(responseMessage);
@@ -86,6 +86,24 @@ public class HotelController {
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error getHotelById: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("detail/{id}")
+//    @PreAuthorize("permitAll()")
+//    @PreAuthorize("!isAnonymous()")
+    public ResponseEntity<?> getHotelDetailById(@PathVariable Integer id) {
+        try {
+            log.info("Start getHotelDetailById with request: {}", id);
+            ResponseMessage responseMessage = hotelService.getHotelDetailById(id);
+            log.info("End getHotelDetailById: {}", responseMessage);
+            if (responseMessage.isStatus()) {
+                return ResponseEntity.ok(responseMessage);
+            }
+            return ResponseEntity.badRequest().body(responseMessage);
+        } catch (Exception e) {
+            log.error("Error getHotelDetailById: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

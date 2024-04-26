@@ -1,5 +1,6 @@
 package com.dqt.hotel.utils;
 
+import com.dqt.hotel.constant.Constant;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +16,7 @@ public class FileUtil {
 
     public static void saveFile(String fileName, MultipartFile multipartFile)
             throws IOException {
-        Path uploadPath = Paths.get("uploads");
+        Path uploadPath = Paths.get(Constant.UPLOAD_DIR);
 
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
