@@ -23,7 +23,7 @@ public class Bill implements Serializable {
     private Integer id;
 
     @Column(name = "booking_id")
-    private String bookingId;
+    private Integer bookingId;
 
     @Column(name = "amount")
     private Integer amount;

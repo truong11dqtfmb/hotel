@@ -10,6 +10,7 @@ public class Constant {
     public static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 
     public static final String CREATED_DATE = "createdDate";
+    public static final String PAYMENT_DATE = "paymentDate";
     public static final String CREATED_AT = "createAt";
 
     public static final String UPLOAD_DIR = "uploads";

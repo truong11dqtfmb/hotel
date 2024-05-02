@@ -1,8 +1,8 @@
 package com.dqt.hotel.utils;
 
-import  com.dqt.hotel.constant.Constant;
-import  com.dqt.hotel.entity.User;
-import  com.dqt.hotel.repository.UserRepository;
+import com.dqt.hotel.constant.Constant;
+import com.dqt.hotel.entity.User;
+import com.dqt.hotel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,6 +15,7 @@ import java.text.Normalizer;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -140,6 +141,22 @@ public class Utils {
             return "";
         }
         return input;
+    }
+
+    public static String checkBlankString(String input) {
+        if (input != null && input.trim().equals("")) {
+            return null;
+        }
+        return input;
+    }
+
+    public static Integer getDiffDate(Date date1, Date date2) {
+        long millisecondsBetween = date2.getTime() - date1.getTime();
+        long daysBetween = TimeUnit.MILLISECONDS.toDays(millisecondsBetween);
+
+        if (daysBetween <= 1) return 1;
+
+        return (int) daysBetween;
     }
 
 
