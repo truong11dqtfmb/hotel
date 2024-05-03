@@ -28,11 +28,15 @@ public class BookingService {
     private final RoomRepository roomRepository;
     private final Utils utils;
     private final BookingRepository bookingRepository;
+    private final RoomService roomService;
 
     public ResponseMessage addBooking(BookingRequest request) {
 //        valid
         ResponseMessage responseMessage = validBooking(request);
         if (!responseMessage.isStatus()) return responseMessage;
+
+        ResponseMessage checkStatusRoom = checkStatusRoom(request.getRoomId());
+        if (!checkStatusRoom.isStatus()) return checkStatusRoom;
 
         Integer userId = utils.gerCurrentUser().getId();
 
@@ -49,8 +53,24 @@ public class BookingService {
 
         Booking save = bookingRepository.save(booking);
 
+        roomService.updateStatusRoom(booking.getRoomId(), Constant.ROOM_FULL);
         return ResponseMessage.ok("Add booking successfully", save);
     }
+
+    ResponseMessage checkStatusRoom(Integer roomId){
+        if(Objects.isNull(roomId)){
+            return ResponseMessage.ok("RoomId not found");
+        }
+        Optional<Room> optional = roomRepository.findById(roomId);
+
+        if(!optional.isPresent()) return ResponseMessage.error("Room not found");
+        Room room = optional.get();
+        if(room.getStatus().equals(Constant.ROOM_FULL)){
+            return ResponseMessage.error("Room is Full");
+        }
+        return ResponseMessage.ok("Room is empty");
+    }
+
 
     public ResponseMessage editBooking(BookingRequest request, Integer id) {
 //        valid
@@ -58,6 +78,8 @@ public class BookingService {
         if (!optional.isPresent()) {
             return ResponseMessage.error("Booking not found");
         }
+        ResponseMessage checkStatusRoom = checkStatusRoom(request.getRoomId());
+        if (!checkStatusRoom.isStatus()) return checkStatusRoom;
 
         Integer userId = utils.gerCurrentUser().getId();
 
@@ -67,6 +89,8 @@ public class BookingService {
         booking.setModifiedDate(new Date());
 
         Booking save = bookingRepository.save(booking);
+
+        roomService.updateStatusRoom(booking.getRoomId(), Constant.ROOM_FULL);
         return ResponseMessage.ok("Edit booking successfully", save);
     }
 

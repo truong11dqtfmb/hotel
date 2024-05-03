@@ -32,7 +32,7 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
             "and h.enabled = 1")
     List<Room> findAllRoom(@Param("key") String key, @Param("hotelId") Integer hotelId, @Param("acreage") Integer acreage, @Param("member") Integer member, @Param("priceMax") Integer priceMax, @Param("priceMin") Integer priceMin);
 
-    @Query("select new com.dqt.hotel.dto.response.RoomResponse(r.roomName, r.hotelId, h.hotelName, r.description, r.acreage, r.member, r.price, r.createdDate, r.createdBy, r.modifiedDate, r.modifiedBy) from Room r inner join Hotel h on h.id = r.hotelId where " +
+    @Query("select new com.dqt.hotel.dto.response.RoomResponse(r.roomName, r.hotelId, h.hotelName, r.description, r.acreage, r.member, r.price, r.status, r.createdDate, r.createdBy, r.modifiedDate, r.modifiedBy) from Room r inner join Hotel h on h.id = r.hotelId where " +
             "(coalesce(:key, null) is null or r.description like CONCAT('%', :key, '%')) " +
             "and (:hotelId is null or r.hotelId = :hotelId) " +
             "and (:acreage is null or r.acreage >= :acreage) " +

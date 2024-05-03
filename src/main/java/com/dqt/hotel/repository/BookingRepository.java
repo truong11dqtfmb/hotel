@@ -48,5 +48,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             "and (coalesce(:endDate, null)  is null or b.checkOutDate <= :endDate) ")
     Long countBooking(@Param("hotelId") Integer hotelId, @Param("roomId") Integer roomId, @Param("userId") Integer userId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
+    @Query("select b from Booking b where b.hotelId = :hotelId and  b.userId = :userId")
+    List<Booking> checkRating(@Param("hotelId") Integer hotelId, @Param("userId") Integer userId);
 
 }

@@ -40,18 +40,7 @@ public class HotelService {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, Constant.CREATED_DATE));
         List<Hotel> all = hotelRepository.findAll(pageable, Utils.checkNullString(key));
 
-        List<Integer> ids = all.stream().map(Hotel::getId).collect(Collectors.toList());
-        List<Avatar> avatars = avatarRepository.findAvatarByIds(ids, Constant.TYPE_HOTEL);
-
-        List<HotelResponse> hotelResponses = new ArrayList<>();
-        all.forEach(h -> {
-            HotelResponse hotelResponse = new HotelResponse();
-            BeanUtils.copyProperties(h, hotelResponse);
-            List<String> collect = avatars.stream().filter(a -> h.getId().equals(a.getImageId())).map(Avatar::getImageName).collect(Collectors.toList());
-            hotelResponse.setAvatar(collect);
-            hotelResponses.add(hotelResponse);
-        });
-
+        List<HotelResponse> hotelResponses = convertListHotelResponse(all);
         Long count = hotelRepository.countTotal(Utils.checkNullString(key));
         Map<String, Object> stringObjectMap = Utils.putData(page, pageSize, count, hotelResponses);
 
@@ -152,4 +141,38 @@ public class HotelService {
         return ResponseMessage.ok("Get Hotel Enabled Successfully", hotelResponse);
 
     }
+
+    public ResponseMessage getListAddressHotel() {
+        List<String> listAddressHotel = hotelRepository.getListAddressHotel();
+        return ResponseMessage.ok("Get Address Hotel Successfully", listAddressHotel);
+    }
+
+    public Map<String, Object> getHomeList(Integer page, Integer pageSize, String address, java.sql.Date checkIn, java.sql.Date checkOut, Integer member) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(Sort.Direction.DESC, Constant.CREATED_DATE));
+        List<Hotel> all = hotelRepository.findHomeHotel(pageable, Utils.checkNullString(address), member);
+        Long count = hotelRepository.countHomeHotel(Utils.checkNullString(address), member);
+
+        List<HotelResponse> hotelResponses = convertListHotelResponse(all);
+
+        Map<String, Object> stringObjectMap = Utils.putData(page, pageSize, count, hotelResponses);
+        return stringObjectMap;
+    }
+
+    public List<HotelResponse> convertListHotelResponse(List<Hotel> all){
+        List<Integer> ids = all.stream().map(Hotel::getId).collect(Collectors.toList());
+        List<Avatar> avatars = avatarRepository.findAvatarByIds(ids, Constant.TYPE_HOTEL);
+
+        List<HotelResponse> hotelResponses = new ArrayList<>();
+        all.forEach(h -> {
+            HotelResponse hotelResponse = new HotelResponse();
+            BeanUtils.copyProperties(h, hotelResponse);
+            List<String> collect = avatars.stream().filter(a -> h.getId().equals(a.getImageId())).map(Avatar::getImageName).collect(Collectors.toList());
+            hotelResponse.setAvatar(collect);
+            hotelResponses.add(hotelResponse);
+        });
+
+        return hotelResponses;
+    }
+
+
 }

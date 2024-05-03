@@ -36,6 +36,17 @@ public class RoomService {
         return stringObjectMap;
     }
 
+    void updateStatusRoom(Integer roomId, Integer status) {
+        if (!Objects.isNull(roomId)) {
+            Optional<Room> optional = roomRepository.findById(roomId);
+            if (optional.isPresent()) {
+                Room room = optional.get();
+                room.setStatus(status);
+                roomRepository.save(room);
+            }
+        }
+    }
+
     public ResponseMessage addRoom(RoomRequest request) {
 //        valid
         ResponseMessage responseMessage = validRoom(request);

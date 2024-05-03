@@ -41,11 +41,4 @@ public class Rating implements Serializable {
     @Column(name = "created_by")
     private String createdBy;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modified_date")
-    private Date modifiedDate;
-
-    @Column(name = "modified_by")
-    private String modifiedBy;
-
 }

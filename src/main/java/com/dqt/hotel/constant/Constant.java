@@ -20,4 +20,7 @@ public class Constant {
     public static final Integer TYPE_HOTEL = 1;
     public static final Integer TYPE_ROOM = 2;
     public static final Integer TYPE_PREVIEW = 2;
+
+    public static final Integer ROOM_FULL = 1;
+    public static final Integer ROOM_EMPTY = 0;
 }

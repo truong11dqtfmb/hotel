@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.Map;
 
 
@@ -23,10 +24,29 @@ public class HotelController {
 
     private final HotelService hotelService;
 
+    @GetMapping("home")
+    public ResponseEntity<?> getHomeList(@RequestParam(required = false, defaultValue = "1") Integer page,
+                                         @RequestParam(required = false, defaultValue = "20") Integer pageSize,
+                                         @RequestParam(required = false) String address,
+                                         @RequestParam(required = false) Date checkIn,
+                                         @RequestParam(required = false) Date checkOut,
+                                         @RequestParam(required = false) Integer member
+    ) {
+        try {
+            log.info("Start getHomeList with request: {}, {}, {}", page, pageSize);
+            Map<String, Object> result = hotelService.getHomeList(page, pageSize, address, checkIn, checkOut, member);
+            log.info("End getHomeList: {}", result);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            log.error("Error getHomeList: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping
     public ResponseEntity<?> getListHotel(@RequestParam(required = false, defaultValue = "1") Integer page,
-                                      @RequestParam(required = false, defaultValue = "20") Integer pageSize,
-                                      @RequestParam(required = false) String key) {
+                                          @RequestParam(required = false, defaultValue = "20") Integer pageSize,
+                                          @RequestParam(required = false) String key) {
         try {
             log.info("Start getListHotel with request: {}, {}, {}", page, pageSize, key);
             Map<String, Object> result = hotelService.listHotel(page, pageSize, key);
@@ -34,6 +54,22 @@ public class HotelController {
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             log.error("Error getListHotel: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("address-hotel")
+    public ResponseEntity<?> getListAddressHotel() {
+        try {
+            log.info("Start getListAddressHotel with request: ");
+            ResponseMessage responseMessage = hotelService.getListAddressHotel();
+            log.info("End getListAddressHotel: {}", responseMessage);
+            if (responseMessage.isStatus()) {
+                return ResponseEntity.ok(responseMessage);
+            }
+            return ResponseEntity.badRequest().body(responseMessage);
+        } catch (Exception e) {
+            log.error("Error getListAddressHotel: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

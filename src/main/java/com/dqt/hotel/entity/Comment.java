@@ -25,9 +25,6 @@ public class Comment implements Serializable {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "user_id")
-    private Integer userId;
-
     @Column(name = "type")
     private Integer type;
 //    1: hotel
@@ -42,15 +39,5 @@ public class Comment implements Serializable {
 
     @Column(name = "created_by")
     private String createdBy;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modified_date")
-    private Date modifiedDate;
-
-    @Column(name = "modified_by")
-    private String modifiedBy;
-
-    @Column(name = "enabled")
-    private Integer enabled;
 
 }

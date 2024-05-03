@@ -31,24 +31,11 @@ public class Review implements Serializable {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "user_id")
-    private Integer userId;
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date")
     private Date createdDate;
 
     @Column(name = "created_by")
     private String createdBy;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modified_date")
-    private Date modifiedDate;
-
-    @Column(name = "modified_by")
-    private String modifiedBy;
-
-    @Column(name = "enabled")
-    private Integer enabled;
 
 }

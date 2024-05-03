@@ -19,6 +19,7 @@ public class RoomResponse {
     private Integer acreage;
     private Integer member;
     private Integer price;
+    private Integer status;
     private Date createdDate;
     private String createdBy;
     private Date modifiedDate;

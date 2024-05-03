@@ -57,4 +57,7 @@ public class Room implements Serializable {
     @Column(name = "enabled")
     private Integer enabled;
 
+    @Column(name = "status")
+    private Integer status;
+
 }

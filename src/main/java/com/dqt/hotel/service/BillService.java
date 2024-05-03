@@ -9,7 +9,6 @@ import com.dqt.hotel.entity.Room;
 import com.dqt.hotel.repository.BillRepository;
 import com.dqt.hotel.repository.BookingRepository;
 import com.dqt.hotel.repository.RoomRepository;
-import com.dqt.hotel.utils.SocketUtils;
 import com.dqt.hotel.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +27,7 @@ public class BillService {
     private final RoomRepository roomRepository;
     private final BookingRepository bookingRepository;
     private final BillRepository billRepository;
+    private final RoomService roomService;
 
     public ResponseMessage calculateBill(Integer id) {
         //        valid
@@ -58,6 +58,9 @@ public class BillService {
         bill.setAmount(diffDate * price);
         bill.setPaymentDate(new Date());
         Bill save = billRepository.save(bill);
+
+        roomService.updateStatusRoom(room.getId(), Constant.ROOM_EMPTY);
+
         return ResponseMessage.ok("Calculate bill successfully", save);
     }
 
