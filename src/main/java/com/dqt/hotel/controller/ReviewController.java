@@ -1,11 +1,13 @@
 package com.dqt.hotel.controller;
 
+import com.dqt.hotel.constant.Authority;
 import com.dqt.hotel.dto.request.ReviewRequest;
 import com.dqt.hotel.dto.response.ResponseMessage;
 import com.dqt.hotel.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -42,9 +44,7 @@ public class ReviewController {
             ResponseMessage responseMessage = reviewService.reviewHotel(request, id);
 
             log.info("End reviewHotel: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error reviewHotel: {}", e.getMessage());
@@ -53,15 +53,14 @@ public class ReviewController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize(Authority.ADMIN)
     public ResponseEntity<?> deleteReview(@PathVariable Integer id) {
         try {
             log.info("Start deleteReview with request: {}", id);
             ResponseMessage responseMessage = reviewService.deleteReview(id);
 
             log.info("End deleteReview: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error deleteReview: {}", e.getMessage());

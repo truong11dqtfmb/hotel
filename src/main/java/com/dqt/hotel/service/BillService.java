@@ -51,7 +51,7 @@ public class BillService {
         Integer price = room.getPrice();
 
         Bill bill = billRepository.findBillByBookingId(id);
-        if (bill == null) {
+        if (Objects.isNull(bill)) {
             bill = new Bill();
         }
         bill.setBookingId(id);

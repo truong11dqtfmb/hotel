@@ -34,9 +34,7 @@ public class UploadController {
             log.info("Start uploadImage with request: {}, {}", type, id);
             ResponseMessage responseMessage = avatarService.uploadAvatar(file, type, id);
             log.info("End uploadImage: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error uploadImage: {}", e.getMessage());
@@ -51,9 +49,7 @@ public class UploadController {
             log.info("Start updateImage with request: {}", id);
             ResponseMessage responseMessage = avatarService.updateAvatar(file, id);
             log.info("End updateImage: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error updateImage: {}", e.getMessage());
@@ -67,9 +63,7 @@ public class UploadController {
             log.info("Start getAvatar with request: {}",id);
             ResponseMessage responseMessage = avatarService.getAvatarById(id);
             log.info("End getAvatar: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error getAvatar: {}", e.getMessage());
@@ -84,9 +78,7 @@ public class UploadController {
             log.info("Start deleteAvatar with request: {}",id);
             ResponseMessage responseMessage = avatarService.deleteAvatar(id);
             log.info("End deleteAvatar: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error deleteAvatar: {}", e.getMessage());

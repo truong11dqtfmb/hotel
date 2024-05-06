@@ -1,6 +1,6 @@
 package com.dqt.hotel.controller.advice;
 
-import  com.dqt.hotel.dto.response.ResponseMessage;
+import com.dqt.hotel.dto.response.ResponseMessage;
 import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,6 +14,9 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice
@@ -64,7 +67,11 @@ public class ControllerAdvice {
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleInvalidMethodArgumentException(MethodArgumentNotValidException e) {
         log.error(e.getMessage(), e);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseMessage.error(e.getMessage()));
+        Map<String, String> errorMap = new HashMap<>();
+        e.getBindingResult().getFieldErrors().forEach(error -> {
+            errorMap.put(error.getField(), error.getField() + " " + error.getDefaultMessage());
+        });
+        return new ResponseEntity<>(ResponseMessage.error("Valid error", errorMap), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = Exception.class)

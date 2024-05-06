@@ -23,6 +23,7 @@ public class HotelResponse {
     private String createdBy;
     private Date modifiedDate;
     private String modifiedBy;
+    private Double rate;
     private List<String> avatar;
     private List<Room> rooms;
     private List<Services> services;

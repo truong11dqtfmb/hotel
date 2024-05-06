@@ -64,9 +64,7 @@ public class HotelController {
             log.info("Start getListAddressHotel with request: ");
             ResponseMessage responseMessage = hotelService.getListAddressHotel();
             log.info("End getListAddressHotel: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error getListAddressHotel: {}", e.getMessage());
@@ -81,9 +79,7 @@ public class HotelController {
             log.info("Start addHotel with request: {}", request);
             ResponseMessage responseMessage = hotelService.addHotel(request);
             log.info("End addHotel: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error addHotel: {}", e.getMessage());
@@ -98,9 +94,7 @@ public class HotelController {
             log.info("Start editHotel with request: {}, {}", request, id);
             ResponseMessage responseMessage = hotelService.editHotel(request, id);
             log.info("End editHotel: {}", request);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error editHotel: {}", e.getMessage());
@@ -116,9 +110,7 @@ public class HotelController {
             log.info("Start getHotelById with request: {}", id);
             ResponseMessage responseMessage = hotelService.getHotelEnabledById(id);
             log.info("End getHotelById: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error getHotelById: {}", e.getMessage());
@@ -134,9 +126,7 @@ public class HotelController {
             log.info("Start getHotelDetailById with request: {}", id);
             ResponseMessage responseMessage = hotelService.getHotelDetailById(id);
             log.info("End getHotelDetailById: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error getHotelDetailById: {}", e.getMessage());
@@ -151,9 +141,7 @@ public class HotelController {
             log.info("Start enableHotel with request: {}", id);
             ResponseMessage responseMessage = hotelService.enableHotel(id, Constant.ACTIVE);
             log.info("End enableHotel: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error enableHotel: {}", e.getMessage());
@@ -168,9 +156,7 @@ public class HotelController {
             log.info("Start disableHotel with request: {}", id);
             ResponseMessage responseMessage = hotelService.enableHotel(id, Constant.INACTIVE);
             log.info("End disableHotel: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error disableHotel: {}", e.getMessage());

@@ -29,9 +29,7 @@ public class UserController {
     public ResponseEntity<?> changeRole(@RequestBody RoleRequest roleRequest) {
         try {
             ResponseMessage responseMessage = userService.changeRole(roleRequest);
-            if (responseMessage.isStatus()) {
-                return new ResponseEntity<>(responseMessage, HttpStatus.OK);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -42,9 +40,7 @@ public class UserController {
     public ResponseEntity<?> getCurrentUser() {
         try {
             ResponseMessage responseMessage = userService.getCurrentUser();
-            if (responseMessage.isStatus()) {
-                return new ResponseEntity<>(responseMessage, HttpStatus.OK);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -73,9 +69,7 @@ public class UserController {
             log.info("Start addUser with request: {}", request);
             ResponseMessage responseMessage = userService.addUser(request);
             log.info("End addUser: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return new ResponseEntity<>(responseMessage, HttpStatus.OK);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error addUser: {}", e.getMessage());
@@ -90,9 +84,7 @@ public class UserController {
             log.info("Start editUser with request: {}", request);
             ResponseMessage responseMessage = userService.editUser(request, id);
             log.info("End editUser: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return new ResponseEntity<>(responseMessage, HttpStatus.OK);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error editUser: {}", e.getMessage());
@@ -106,9 +98,7 @@ public class UserController {
             log.info("Start getUserById with request: {}", id);
             ResponseMessage responseMessage = userService.getUserById(id);
             log.info("End getUserById: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return new ResponseEntity<>(responseMessage, HttpStatus.OK);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error getUserById: {}", e.getMessage());
@@ -123,9 +113,7 @@ public class UserController {
             log.info("Start enabledUser with request: {}", id);
             ResponseMessage responseMessage = userService.enabled(id, Constant.ACTIVE);
             log.info("End enabledUser: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return new ResponseEntity<>(responseMessage, HttpStatus.OK);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error enabledUser: {}", e.getMessage());
@@ -140,9 +128,7 @@ public class UserController {
             log.info("Start disabledUser with request: {}", id);
             ResponseMessage responseMessage = userService.enabled(id, Constant.INACTIVE);
             log.info("End disabledUser: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return new ResponseEntity<>(responseMessage, HttpStatus.OK);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error disabledUser: {}", e.getMessage());

@@ -42,4 +42,12 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
 
     @Query("select b from Bill b where (coalesce(:date, null) is null or b.paymentDate <= :date)")
     List<Bill> filterBillPayment(Date date);
+
+    @Query("select b from Bill b where (coalesce(:startDate, null)  is null or b.paymentDate >= :startDate) " +
+            "and (coalesce(:endDate, null)  is null or b.paymentDate <= :endDate) ")
+    List<Bill> findAllBetweenTime(@Param("startDate") java.util.Date startDate, @Param("endDate") java.util.Date endDate);
+
+    @Query("select sum(b.amount) from Bill b where (coalesce(:startDate, null)  is null or b.paymentDate >= :startDate) " +
+            "and (coalesce(:endDate, null)  is null or b.paymentDate <= :endDate) ")
+    List<Integer> sumAmountBetweenTime(@Param("startDate") java.util.Date startDate, @Param("endDate") java.util.Date endDate);
 }

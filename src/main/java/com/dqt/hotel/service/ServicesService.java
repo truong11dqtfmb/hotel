@@ -15,7 +15,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -72,16 +75,8 @@ public class ServicesService {
     }
 
     public ResponseMessage validService(ServiceRequest request) {
-        if (request.getServiceName().isBlank()) {
-            return ResponseMessage.error("Please service name is blank");
-        }
-
-        if (Objects.isNull(request.getHotelId())) {
-            return ResponseMessage.error("Please hotel is null");
-        } else {
-            ResponseMessage msg = hotelService.getHotelEnabledById(request.getHotelId());
-            if (!msg.isStatus()) return msg;
-        }
+        ResponseMessage msg = hotelService.getHotelEnabledById(request.getHotelId());
+        if (!msg.isStatus()) return msg;
 
         return ResponseMessage.ok("Validate successfully");
     }

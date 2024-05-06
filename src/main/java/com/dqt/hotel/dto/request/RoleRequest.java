@@ -1,5 +1,6 @@
 package com.dqt.hotel.dto.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,5 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class RoleRequest {
     private List<String> roles;
+
+    @NotNull
     private Integer userId;
 }

@@ -54,7 +54,7 @@ public class FakeDataService {
             room.setCreatedDate(new Date());
             roomToAdd.add(room);
         }
-        roomRepository.saveAll(roomToAdd);
+//        roomRepository.saveAll(roomToAdd);
         return ResponseMessage.ok("Random room successfully added");
     }
 
@@ -85,7 +85,7 @@ public class FakeDataService {
             services.setCreatedDate(new Date());
             serviceToAdd.add(services);
         }
-        servicesRepository.saveAll(serviceToAdd);
+//        servicesRepository.saveAll(serviceToAdd);
         return ResponseMessage.ok("Random room successfully added");
     }
 

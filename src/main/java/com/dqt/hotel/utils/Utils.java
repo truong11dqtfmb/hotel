@@ -159,5 +159,15 @@ public class Utils {
         return (int) daysBetween;
     }
 
+    public static String convertToCurrency(Integer amount) {
+        Locale locale = new Locale("vi", "VN");
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(locale);
+        Currency currency = Currency.getInstance(locale);
+        String currencyString = currencyFormat.format(amount);
+        String result = currencyString + " " + currency.getCurrencyCode();
+
+        return result;
+    }
+
 
 }

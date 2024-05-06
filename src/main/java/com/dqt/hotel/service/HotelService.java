@@ -4,14 +4,8 @@ import com.dqt.hotel.constant.Constant;
 import com.dqt.hotel.dto.request.HotelRequest;
 import com.dqt.hotel.dto.response.HotelResponse;
 import com.dqt.hotel.dto.response.ResponseMessage;
-import com.dqt.hotel.entity.Avatar;
-import com.dqt.hotel.entity.Hotel;
-import com.dqt.hotel.entity.Room;
-import com.dqt.hotel.entity.Services;
-import com.dqt.hotel.repository.AvatarRepository;
-import com.dqt.hotel.repository.HotelRepository;
-import com.dqt.hotel.repository.RoomRepository;
-import com.dqt.hotel.repository.ServicesRepository;
+import com.dqt.hotel.entity.*;
+import com.dqt.hotel.repository.*;
 import com.dqt.hotel.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +28,7 @@ public class HotelService {
     private final ServicesRepository serviceRepository;
     private final RoomRepository roomRepository;
     private final Utils utils;
+    private final RatingRepository ratingRepository;
 
 
     public Map<String, Object> listHotel(Integer page, Integer pageSize, String key) {
@@ -49,10 +44,6 @@ public class HotelService {
 
 
     public ResponseMessage addHotel(HotelRequest hotelRequest) {
-//        valid
-        ResponseMessage responseMessage = validHotel(hotelRequest);
-        if (!responseMessage.isStatus()) return responseMessage;
-
 //        add
         Hotel hotel = Hotel.builder()
                 .hotelName(hotelRequest.getHotelName())
@@ -66,24 +57,9 @@ public class HotelService {
         return ResponseMessage.ok("Add hotel successfully", save);
     }
 
-    public ResponseMessage validHotel(HotelRequest hotelRequest) {
-        if (hotelRequest.getHotelName().isBlank()) {
-            return ResponseMessage.error("Please hotel name is blank");
-        }
-        if (hotelRequest.getAddress().isBlank()) {
-            return ResponseMessage.error("Please hotel address is blank");
-        }
-        return ResponseMessage.ok("Validate successfully");
-    }
-
-
     public ResponseMessage editHotel(HotelRequest request, Integer id) {
         ResponseMessage message = this.getHotelEnabledById(id);
         if (!message.isStatus()) return message;
-
-//        valid
-        ResponseMessage responseMessage = validHotel(request);
-        if (!responseMessage.isStatus()) return responseMessage;
 
 //        edit
         Hotel hotel = (Hotel) message.getData();
@@ -135,6 +111,14 @@ public class HotelService {
         List<Services> services = serviceRepository.filterAllService("", id);
         hotelResponse.setServices(services);
 
+        List<Rating> allByHotelId = ratingRepository.findAllByHotelId(id);
+        OptionalDouble average = allByHotelId.stream().map(Rating::getRate).mapToInt(a -> a).average();
+        if (average.isPresent()) {
+            hotelResponse.setRate(average.getAsDouble());
+        }else{
+            hotelResponse.setRate((double) 0);
+        }
+
         List<Room> rooms = roomRepository.findAllRoom("", id, null, null, null, null);
         hotelResponse.setRooms(rooms);
 
@@ -168,6 +152,13 @@ public class HotelService {
             BeanUtils.copyProperties(h, hotelResponse);
             List<String> collect = avatars.stream().filter(a -> h.getId().equals(a.getImageId())).map(Avatar::getImageName).collect(Collectors.toList());
             hotelResponse.setAvatar(collect);
+            List<Rating> allByHotelId = ratingRepository.findAllByHotelId(h.getId());
+            OptionalDouble average = allByHotelId.stream().map(Rating::getRate).mapToInt(a -> a).average();
+            if (average.isPresent()) {
+                hotelResponse.setRate(average.getAsDouble());
+            }else{
+                hotelResponse.setRate((double) 0);
+            }
             hotelResponses.add(hotelResponse);
         });
 

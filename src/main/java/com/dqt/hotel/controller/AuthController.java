@@ -42,9 +42,7 @@ public class AuthController {
     public ResponseEntity<?> signUpUser(@RequestBody SignupRequest signUpRequest) {
         try {
             ResponseMessage responseMessage = userService.signUp(signUpRequest);
-            if (responseMessage.isStatus()) {
-                return new ResponseEntity<>(responseMessage, HttpStatus.OK);
-            }
+            if (responseMessage.isStatus()) return new ResponseEntity<>(responseMessage, HttpStatus.OK);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -93,8 +91,4 @@ public class AuthController {
         return ResponseEntity.ok(ResponseMessage.ok("Log out successfully"));
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<?> test() {
-        return ResponseEntity.ok(ResponseMessage.ok("test"));
-    }
 }

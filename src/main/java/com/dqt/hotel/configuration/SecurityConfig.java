@@ -58,7 +58,8 @@ public class SecurityConfig {
                         req.requestMatchers(WHITE_LIST_URL).permitAll().
                                 requestMatchers("/api/auth/**").permitAll()
                                 .anyRequest()
-                                .authenticated()
+                                .permitAll()
+//                                .authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);

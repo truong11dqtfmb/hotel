@@ -86,25 +86,8 @@ public class RoomService {
     }
 
     public ResponseMessage validRoom(RoomRequest request) {
-        if (request.getRoomName().isBlank()) {
-            return ResponseMessage.error("Please room name is blank");
-        }
-        if (Objects.isNull(request.getAcreage())) {
-            return ResponseMessage.error("Please room acreage is null");
-        }
-        if (Objects.isNull(request.getMember())) {
-            return ResponseMessage.error("Please room member is null");
-        }
-        if (Objects.isNull(request.getPrice())) {
-            return ResponseMessage.error("Please room price is null");
-        }
-
-        if (Objects.isNull(request.getHotelId())) {
-            return ResponseMessage.error("Please hotel is null");
-        } else {
-            ResponseMessage msg = hotelService.getHotelEnabledById(request.getHotelId());
-            if (!msg.isStatus()) return msg;
-        }
+        ResponseMessage msg = hotelService.getHotelEnabledById(request.getHotelId());
+        if (!msg.isStatus()) return msg;
 
         return ResponseMessage.ok("Validate successfully");
     }

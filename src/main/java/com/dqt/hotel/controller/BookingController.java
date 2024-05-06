@@ -1,11 +1,13 @@
 package com.dqt.hotel.controller;
 
+import com.dqt.hotel.constant.Authority;
 import com.dqt.hotel.dto.request.BookingRequest;
 import com.dqt.hotel.dto.response.ResponseMessage;
 import com.dqt.hotel.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
@@ -40,14 +42,13 @@ public class BookingController {
     }
 
     @PostMapping
+    @PreAuthorize(Authority.ADMIN)
     public ResponseEntity<?> addBooking(@RequestBody BookingRequest request) {
         try {
             log.info("Start addBooking with request: {}", request);
             ResponseMessage responseMessage = bookingService.addBooking(request);
             log.info("End addBooking: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error addBooking: {}", e.getMessage());
@@ -56,14 +57,13 @@ public class BookingController {
     }
 
     @PutMapping("{id}")
+    @PreAuthorize(Authority.ADMIN)
     public ResponseEntity<?> editBooking(@RequestBody BookingRequest request, @PathVariable Integer id) {
         try {
             log.info("Start editBooking with request: {}, {}", request, id);
             ResponseMessage responseMessage = bookingService.editBooking(request, id);
             log.info("End editBooking: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error editBooking: {}", e.getMessage());
@@ -77,9 +77,7 @@ public class BookingController {
             log.info("Start getBooking with request: {}", id);
             ResponseMessage responseMessage = bookingService.getBooking(id);
             log.info("End getBooking: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error getBooking: {}", e.getMessage());
@@ -93,9 +91,7 @@ public class BookingController {
             log.info("Start getUserBooking with request: {}", userId);
             ResponseMessage responseMessage = bookingService.getBookingByUser(userId);
             log.info("End getUserBooking: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error getUserBooking: {}", e.getMessage());

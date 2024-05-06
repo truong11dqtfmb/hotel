@@ -1,11 +1,13 @@
 package com.dqt.hotel.controller;
 
+import com.dqt.hotel.constant.Authority;
 import com.dqt.hotel.dto.request.RatingRequest;
 import com.dqt.hotel.dto.response.ResponseMessage;
 import com.dqt.hotel.service.RatingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -42,9 +44,7 @@ public class RatingController {
             ResponseMessage responseMessage = ratingService.calculateRatingHotel(id);
 
             log.info("End calculateRatingHotel: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error calculateRatingHotel: {}", e.getMessage());
@@ -59,9 +59,7 @@ public class RatingController {
             ResponseMessage responseMessage = ratingService.ratingHotel(request, id);
 
             log.info("End ratingHotel: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error ratingHotel: {}", e.getMessage());
@@ -70,15 +68,14 @@ public class RatingController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize(Authority.ADMIN)
     public ResponseEntity<?> deleteRating(@PathVariable Integer id) {
         try {
             log.info("Start deleteRating with request: {}", id);
             ResponseMessage responseMessage = ratingService.deleteRating(id);
 
             log.info("End deleteRating: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error deleteRating: {}", e.getMessage());
@@ -93,9 +90,7 @@ public class RatingController {
             ResponseMessage responseMessage = ratingService.checkRating(id);
 
             log.info("End checkRating: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error checkRating: {}", e.getMessage());

@@ -46,15 +46,6 @@ public class CommentService {
     }
 
     private ResponseMessage validComment(CommentRequest request) {
-        if (Objects.isNull(request.getCommentId())) {
-            return ResponseMessage.error("Id hotel or review not null");
-        }
-        if (request.getContent().isBlank()) {
-            return ResponseMessage.error("Content is blank");
-        }
-        if (request.getType() != Constant.TYPE_HOTEL && request.getType() != Constant.TYPE_PREVIEW) {
-            return ResponseMessage.error("Type is 1: hotel || 2: review");
-        }
         if (request.getType() == Constant.TYPE_HOTEL) {
             Optional<Hotel> optionalHotel = hotelRepository.findById(request.getCommentId());
             if (!optionalHotel.isPresent()) {

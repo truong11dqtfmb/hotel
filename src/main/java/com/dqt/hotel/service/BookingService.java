@@ -57,17 +57,13 @@ public class BookingService {
         return ResponseMessage.ok("Add booking successfully", save);
     }
 
-    ResponseMessage checkStatusRoom(Integer roomId){
-        if(Objects.isNull(roomId)){
-            return ResponseMessage.ok("RoomId not found");
-        }
+    ResponseMessage checkStatusRoom(Integer roomId) {
+        if (Objects.isNull(roomId)) return ResponseMessage.ok("RoomId not found");
         Optional<Room> optional = roomRepository.findById(roomId);
 
-        if(!optional.isPresent()) return ResponseMessage.error("Room not found");
+        if (!optional.isPresent()) return ResponseMessage.error("Room not found");
         Room room = optional.get();
-        if(room.getStatus().equals(Constant.ROOM_FULL)){
-            return ResponseMessage.error("Room is Full");
-        }
+        if (room.getStatus().equals(Constant.ROOM_FULL)) return ResponseMessage.error("Room is Full");
         return ResponseMessage.ok("Room is empty");
     }
 
@@ -95,12 +91,8 @@ public class BookingService {
     }
 
     private ResponseMessage validBooking(BookingRequest request) {
-        if (Objects.isNull(request.getHotelId())) {
-            return ResponseMessage.error("Please hotel is null");
-        } else {
-            ResponseMessage msg = hotelService.getHotelEnabledById(request.getHotelId());
-            if (!msg.isStatus()) return msg;
-        }
+        ResponseMessage msg = hotelService.getHotelEnabledById(request.getHotelId());
+        if (!msg.isStatus()) return msg;
         if (!Objects.isNull(request.getRoomId())) {
             Optional<Room> optional = roomRepository.findById(request.getRoomId());
             if (!optional.isPresent()) return ResponseMessage.error("Could not found by id: " + request.getRoomId());
@@ -114,9 +106,7 @@ public class BookingService {
     public ResponseMessage getBooking(Integer id) {
         //        valid
         Optional<Booking> optional = bookingRepository.findById(id);
-        if (!optional.isPresent()) {
-            return ResponseMessage.error("Booking not found");
-        }
+        if (!optional.isPresent()) return ResponseMessage.error("Booking not found");
         return ResponseMessage.ok("Get Booking Successfully", optional.get());
     }
 

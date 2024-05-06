@@ -51,9 +51,7 @@ public class RoomController {
             log.info("Start addRoom with request: {}", request);
             ResponseMessage responseMessage = roomService.addRoom(request);
             log.info("End addRoom: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error addRoom: {}", e.getMessage());
@@ -68,9 +66,7 @@ public class RoomController {
             log.info("Start editRoom with request: {}, {}", request, id);
             ResponseMessage responseMessage = roomService.editRoom(request, id);
             log.info("End editRoom: {}", request);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error editRoom: {}", e.getMessage());
@@ -86,9 +82,7 @@ public class RoomController {
             log.info("Start getRoomById with request: {}", id);
             ResponseMessage responseMessage = roomService.getRoomEnabledById(id);
             log.info("End getRoomById: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error getRoomById: {}", e.getMessage());
@@ -103,9 +97,7 @@ public class RoomController {
             log.info("Start enableRoom with request: {}", id);
             ResponseMessage responseMessage = roomService.enableRoom(id, Constant.ACTIVE);
             log.info("End enableRoom: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error enableRoom: {}", e.getMessage());
@@ -120,9 +112,7 @@ public class RoomController {
             log.info("Start disableRoom with request: {}", id);
             ResponseMessage responseMessage = roomService.enableRoom(id, Constant.INACTIVE);
             log.info("End disableRoom: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error disableRoom: {}", e.getMessage());

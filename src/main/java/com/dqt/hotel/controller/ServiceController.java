@@ -47,9 +47,7 @@ public class ServiceController {
             log.info("Start addService with request: {}", request);
             ResponseMessage responseMessage = serviceService.addService(request);
             log.info("End addService: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error addService: {}", e.getMessage());
@@ -64,9 +62,7 @@ public class ServiceController {
             log.info("Start editService with request: {}, {}", request, id);
             ResponseMessage responseMessage = serviceService.editService(request, id);
             log.info("End editService: {}", request);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error editService: {}", e.getMessage());
@@ -82,9 +78,7 @@ public class ServiceController {
             log.info("Start getServiceById with request: {}", id);
             ResponseMessage responseMessage = serviceService.getServiceEnabledById(id);
             log.info("End getServiceById: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error getServiceById: {}", e.getMessage());
@@ -99,9 +93,7 @@ public class ServiceController {
             log.info("Start enableService with request: {}", id);
             ResponseMessage responseMessage = serviceService.enableService(id, Constant.ACTIVE);
             log.info("End enableService: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error enableService: {}", e.getMessage());
@@ -116,9 +108,7 @@ public class ServiceController {
             log.info("Start disableService with request: {}", id);
             ResponseMessage responseMessage = serviceService.enableService(id, Constant.INACTIVE);
             log.info("End disableService: {}", responseMessage);
-            if (responseMessage.isStatus()) {
-                return ResponseEntity.ok(responseMessage);
-            }
+            if (responseMessage.isStatus()) return ResponseEntity.ok(responseMessage);
             return ResponseEntity.badRequest().body(responseMessage);
         } catch (Exception e) {
             log.error("Error disableService: {}", e.getMessage());

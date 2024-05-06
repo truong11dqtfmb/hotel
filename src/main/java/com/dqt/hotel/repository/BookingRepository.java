@@ -51,4 +51,8 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     @Query("select b from Booking b where b.hotelId = :hotelId and  b.userId = :userId")
     List<Booking> checkRating(@Param("hotelId") Integer hotelId, @Param("userId") Integer userId);
 
+    @Query("select b from Booking b where (coalesce(:startDate, null)  is null or b.checkInDate >= :startDate) " +
+            "and (coalesce(:endDate, null)  is null or b.checkOutDate <= :endDate) ")
+    List<Booking> findAllBetweenTime(@Param("startDate") java.util.Date startDate, @Param("endDate") java.util.Date endDate);
+
 }

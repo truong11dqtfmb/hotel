@@ -33,9 +33,7 @@ public class ReviewService {
         Optional<Hotel> optional = hotelRepository.findById(id);
         if (!optional.isPresent()) return ResponseMessage.error("Could not found by id: " + id);
         Hotel hotel = optional.get();
-        if (hotel.getEnabled().equals(Constant.INACTIVE)) {
-            return ResponseMessage.error("Hotel is disabled: " + id);
-        }
+        if (hotel.getEnabled().equals(Constant.INACTIVE))  return ResponseMessage.error("Hotel is disabled: " + id);
         Review review = Review.builder()
                 .hotelId(id)
                 .title(request.getTitle())
