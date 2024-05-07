@@ -41,7 +41,11 @@ logging:
             sql:
               BasicBinder: trace
 
-
+minio:
+  url: http://213.136.80.48:9000
+  access-key: nZM1Apuad0ayaACUJo3U
+  secret-key: CdchAYDvNoBrWKd8vrAU5lINt9tTKIrXkKsv4TVU
+  bucket: hotel
 
 
 jwt:
