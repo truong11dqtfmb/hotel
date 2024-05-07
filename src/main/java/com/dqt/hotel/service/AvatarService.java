@@ -7,12 +7,12 @@ import com.dqt.hotel.repository.AvatarRepository;
 import com.dqt.hotel.repository.HotelRepository;
 import com.dqt.hotel.repository.RoomRepository;
 import com.dqt.hotel.utils.FileUtil;
+import com.dqt.hotel.utils.MinIOUtils;
 import com.dqt.hotel.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -24,6 +24,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AvatarService {
+
+    @Value("${minio.bucket}")
+    private String bucketName;
+
+    private final MinIOUtils minIOUtils;
     private final AvatarRepository avatarRepository;
     private final HotelRepository hotelRepository;
     private final RoomRepository roomRepository;
@@ -32,11 +37,13 @@ public class AvatarService {
     public ResponseMessage uploadAvatar(MultipartFile file, Integer type, Integer id) throws IOException {
         ResponseMessage responseMessage = validateAvatar(file, type, id);
         if (!responseMessage.isStatus()) return responseMessage;
-
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        String fileCode = RandomStringUtils.randomAlphanumeric(8);
-        String imageName = fileCode + "-" + fileName;
-        FileUtil.saveFile(imageName, file);
+        String imageName;
+        if (type.equals(Constant.TYPE_HOTEL)) {
+            imageName = FileUtil.generateFileName("hotel", file);
+        }else{
+            imageName = FileUtil.generateFileName("room", file);
+        }
+        minIOUtils.putObject(bucketName, file, imageName);
 
         Avatar avatar = new Avatar();
         avatar.setCreatedDate(new Date());
@@ -110,10 +117,13 @@ public class AvatarService {
         ResponseMessage responseMessage = validateFile(file);
         if (!responseMessage.isStatus()) return responseMessage;
 
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        String fileCode = RandomStringUtils.randomAlphanumeric(8);
-        String imageName = fileCode + "-" + fileName;
-        FileUtil.saveFile(imageName, file);
+        String imageName;
+        if (optional.get().getType().equals(Constant.TYPE_HOTEL)) {
+            imageName = FileUtil.generateFileName("hotel", file);
+        }else{
+            imageName = FileUtil.generateFileName("room", file);
+        }
+        minIOUtils.putObject(bucketName, file, imageName);
 
         Avatar avatar = optional.get();
         avatar.setModifiedDate(new Date());

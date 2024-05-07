@@ -15,7 +15,7 @@ public class Constant {
 
     public static final String UPLOAD_DIR = "uploads";
     public static final long MAX_FILE_SIZE = 20 * 1024 * 1024;
-    public static final String[] ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png", "gif"};
+    public static final String[] ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png", "gif", "jfif"};
 
     public static final Integer TYPE_HOTEL = 1;
     public static final Integer TYPE_ROOM = 2;

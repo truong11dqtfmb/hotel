@@ -51,7 +51,7 @@ public class CommentService {
             if (!optionalHotel.isPresent()) {
                 return ResponseMessage.error("Hotel not found");
             }
-        } else if (request.getType() == Constant.TYPE_HOTEL) {
+        } else if (request.getType() == Constant.TYPE_PREVIEW) {
             Optional<Review> optionalReview = reviewRepository.findById(request.getCommentId());
             if (!optionalReview.isPresent()) {
                 return ResponseMessage.error("Review not found");

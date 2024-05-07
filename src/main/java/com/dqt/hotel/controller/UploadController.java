@@ -1,22 +1,23 @@
 package com.dqt.hotel.controller;
 
 import com.dqt.hotel.constant.Authority;
-import com.dqt.hotel.constant.Constant;
 import com.dqt.hotel.dto.response.ResponseMessage;
 import com.dqt.hotel.service.AvatarService;
+import com.dqt.hotel.utils.FileUtil;
+import com.dqt.hotel.utils.MinIOUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
 
 @RestController
 @RequestMapping("${api.prefix}/upload")
@@ -24,6 +25,11 @@ import java.nio.file.Paths;
 @Slf4j
 @RequiredArgsConstructor
 public class UploadController {
+
+    @Value("${minio.bucket}")
+    private String bucketName;
+
+    private final MinIOUtils minIOUtils;
 
     private final AvatarService avatarService;
 
@@ -87,15 +93,18 @@ public class UploadController {
     }
 
     @GetMapping("getImage/{photo}")
-    public ResponseEntity<ByteArrayResource> getImage(@PathVariable("photo") String photo) {
+    public ResponseEntity<?> getImage(@PathVariable("photo") String photo) {
         log.info("Start getImage with request: {}", photo);
         if (!photo.equals("") || photo != null) {
             try {
-                Path fileName = Paths.get(Constant.UPLOAD_DIR, photo);
-                byte[] buffer = Files.readAllBytes(fileName);
-                ByteArrayResource byteArrayResource = new ByteArrayResource(buffer);
-                log.info("End getImage: {}", byteArrayResource);
-                return ResponseEntity.ok().contentLength(buffer.length).contentType(MediaType.parseMediaType("image/png")).body(byteArrayResource);
+                InputStream stream = minIOUtils.getObject(bucketName, photo);
+                byte[] bytes = FileUtil.convertInputStreamToByteArray(stream);
+                InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
+
+                return ResponseEntity.ok()
+                        .contentLength(bytes.length)
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(resource);
             } catch (Exception e) {
                 log.error("Error getImage: {}", e.getMessage());
                 e.printStackTrace();
