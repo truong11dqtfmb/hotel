@@ -28,7 +28,9 @@ spring:
       port: 6379
       expire-time: 604800000
 
-
+  elasticsearch:
+    uris: http://213.136.80.48:9200
+    host: 213.136.80.48:9200
 #OpenAPI Properties
 springdoc:
   api-docs:
